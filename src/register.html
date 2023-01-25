@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Social Media</title>
+</head>
+
+<body>
+    <form id="register">
+        <label>RegName: <input type="text" id="regName"/></label>
+        <button type="submit" onClick="register()">Register</button>
+    </form>
+
+    <script>
+        document.getElementById("register").
+            addEventListener('submit', event => {
+                event.preventDefault();
+                register();
+            });
+
+        // Handle register
+        function register() {
+            const name = document.getElementById("regName").value;
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name })
+            })
+        }
+    </script>
+</body>
+</html>

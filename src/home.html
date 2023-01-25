@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Social Media</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div id="root1"></div>
+    <div id="root2"></div>
+    <form id="register">
+        <label>RegName: <input type="text" id="regName"/></label>
+        <button type="submit" onClick="register()">Register</button>
+    </form>
+
+    <form id="login">
+        <label>LoginName: <input type="text" id="logName"/></label>
+        <button type="submit" onClick="login()">Login</button>
+    </form>
+
+    <script>
+        document.getElementById("register").
+            addEventListener('submit', event => {
+                event.preventDefault();
+                register();
+            });
+        
+        document.getElementById("login").
+            addEventListener('submit', event => {
+                event.preventDefault();
+                login();
+            });
+
+        // Handle register
+        const register = () => {
+            const name = document.getElementById("regName").value;
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name })
+            })
+        }
+
+        // Handle login
+        const login = () => {
+            const name = document.getElementById("logName").value;
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name })
+            })
+        }
+
+        // Check for authenticated user
+        const checkAuth = () => {
+            fetch("/check-auth", {
+                method: "GET",
+                credentials: "include" // to send cookies
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    displayLoggedIn();
+                })
+                .catch(err => {
+                    console.log(err);
+                    displayLoginForm();
+                });
+        }
+
+        // Handle logout
+        const logout = () => {
+            fetch("/logout", {
+                method: "POST",
+                credentials: "include" // to send cookies
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    displayLoginForm();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+
+        // Handle creating a new post
+        const createPost = () => {
+            const post = document.getElementById("post").value;
+            fetch("/social-post", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ post }),
+                credentials: "include" // to send cookies
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    fetchPosts();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+
+        // Fetch all posts
+        const fetchPosts = () => {
+            fetch("/social-post", {
+                method: "GET",
+                credentials: "include" // to send cookies
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const postContainer = document.getElementById("post-container");
+                    postContainer.innerHTML = "";
+                    data.forEach(post => {
+                        const postEl = document.createElement("div");
+                        postEl.innerHTML = post.text;
+                        postContainer.appendChild(postEl);
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+
+        // On page load, check for authenticated user
+        checkAuth();
+    </script>
+</body>
+</html>

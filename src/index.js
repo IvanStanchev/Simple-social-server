@@ -26,30 +26,30 @@ app.use(
 app.use(cookies());
 
 const checkAuth = (req, res, next) => {
-  const { sessionId } = req.cookies;
-  if (!sessionId) {
-    return res.status(401).send({ error: "SessionId is required" });
-  }
+  // const { sessionId } = req.cookies;
+  // if (!sessionId) {
+  //   return res.status(401).send({ error: "SessionId is required" });
+  // }
 
-  const { sessions } = store;
-  const session = sessions.find(session => session.id === sessionId);
-  if (!session) {
-    return res.status(401).send({ error: 'Not authorized'});
-  }
+  // const { sessions } = store;
+  // const session = sessions.find(session => session.id === sessionId);
+  // if (!session) {
+  //   return res.status(401).send({ error: 'Not authorized'});
+  // }
 
-  req.userId = session.userId;
+  // req.userId = session.userId;
   next();
 };
 
 const updateDb = (newUsers, newPosts, newSessions) => {
-  const { users, socialPosts: posts, sessions } = store;
+  const { users, socialPosts, sessions } = store;
   const db = {
     users: newUsers || users,
-    socialPosts: newPosts || posts,
+    socialPosts: newPosts || socialPosts,
     sessions: newSessions || sessions,
   };
 
-  store.socialPosts = db.posts;
+  store.socialPosts = db.socialPosts;
   store.users = db.users;
   store.sessions = db.sessions;
 
@@ -70,9 +70,16 @@ const removeFromSessions = (sessionId) => {
   updateDb(null, null, newSessions);
 };
 
-app.get('/', (req, res) => res.send('Welcome to the Simple Social media API!'));
+app.get("/", (_, res) => {
+  res.sendFile(__dirname + "/home.html");
+});
 
 // register
+
+app.get("/register", (_, res) => {
+  res.sendFile(__dirname + "/register.html");
+});
+
 app.post("/register", (req, res) => {
   const { name } = req.body;
 
@@ -91,6 +98,11 @@ app.post("/register", (req, res) => {
   users.push(user);
   updateDb(users);
   res.status(201).send();
+});
+
+
+app.get("/login", (_, res) => {
+  res.sendFile(__dirname + "/login.html");
 });
 
 app.post("/login", (req, res) => {
@@ -134,19 +146,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/posts", checkAuth, (req, res) => {
-  const { socialPosts } = store;
-
-  const posts = socialPosts.map(post => {
-    const { users } = store;
-    const user = users.find(user => user.id === post.userId);
-    postCopy = { ...post };
-    postCopy.userName = user.name;
-    postCopy.likes = postCopy.likes?.length ?? 0;
-    delete postCopy.userId;
-    return postCopy;
-  });
-
-  res.send(posts);
+    return res.sendFile(__dirname + "/posts.html");
 });
 
 app.get("/posts/:id", checkAuth, (req, res) => {

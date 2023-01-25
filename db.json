@@ -1,5 +1,45 @@
 {
-  "users": [],
-  "socialPosts": [],
-  "sessions": []
+  "users": [
+    {
+      "id": "ba759a48e46b8d054426cd0b8a8a33f9",
+      "name": "Gosho"
+    },
+    {
+      "id": "bae45b4b7ea07f8a87a479cc26a74221",
+      "name": "F"
+    },
+    {
+      "id": "4a2c9cde9ce84158bda70df31d53b9ac",
+      "name": "daw"
+    },
+    {
+      "id": "038a386bd98be634faf9f78a33d59b2d",
+      "name": "dwa"
+    },
+    {
+      "id": "8289ecda63e25c7d64a354ff154120be",
+      "name": "Ivan"
+    },
+    {
+      "id": "d10a6a474a16c6f66a043fca4ae025bf",
+      "name": "User"
+    },
+    {
+      "id": "c4e8cb44e9dbde6297691f0da1914e92",
+      "name": "Test"
+    }
+  ],
+  "socialPosts": [
+    {
+      "id": "b1d2edeb5a4c01215407c17f2318ef2e",
+      "content": "New post",
+      "likes": []
+    }
+  ],
+  "sessions": [
+    {
+      "id": "85b19ef33d55e36fd287370a56d242c4",
+      "userId": "8289ecda63e25c7d64a354ff154120be"
+    }
+  ]
 }

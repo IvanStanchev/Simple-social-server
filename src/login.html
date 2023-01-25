@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Social Media</title>
+</head>
+
+<body>
+    <form id="login">
+        <label>LoginName: <input type="text" id="logName"/></label>
+        <button type="submit" onClick="login()">Login</button>
+    </form>
+
+    <script>  
+        document.getElementById("login").
+            addEventListener('submit', event => {
+                event.preventDefault();
+                login();
+                document.getElementById("name").reset();
+            });
+
+        // Handle login
+        function login() {
+            const name = document.getElementById("logName").value;
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name })
+            })
+        }
+    </script>
+</body>
+</html>
